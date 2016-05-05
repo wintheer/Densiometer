@@ -1,15 +1,21 @@
 package com.example.winther.densiometer.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.winther.densiometer.R;
 import com.example.winther.densiometer.models.Measurement;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,6 +66,17 @@ public class MeasurementAdapter extends BaseAdapter {
 
         if (measurement != null) {
             ((TextView) convertView.findViewById(R.id.measurement_list_item_text)).setText(measurement.getMeasurement() +"");
+
+            try {
+                File f=new File(measurement.getImagePath());
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+                ((ImageView) convertView.findViewById(R.id.measurement_list_item_image)).setImageBitmap(b);
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+
         }
 
         return convertView;
