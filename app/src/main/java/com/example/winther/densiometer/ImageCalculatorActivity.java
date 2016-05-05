@@ -125,6 +125,7 @@ public class ImageCalculatorActivity extends AppCompatActivity {
                     measurement.setMeasurement(Math.round((numberOfCoveredSquares * 100)));
                     measurement.setImagePath(chosenImageUri.getPath());
                     realm.commitTransaction();
+                    realm.close();
                 }
             });
         }
