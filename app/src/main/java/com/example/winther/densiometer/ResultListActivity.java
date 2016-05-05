@@ -27,13 +27,7 @@ public class ResultListActivity extends AppCompatActivity implements AdapterView
         setContentView(R.layout.activity_result_list);
 
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.deleteRealm(realmConfiguration); // Clear the realm from last time
         realm = Realm.getInstance(realmConfiguration); // Create a new empty instance of Realm
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         if(mAdapter == null) {
             List<Measurement> measurements = loadMeasurements();
@@ -50,6 +44,13 @@ public class ResultListActivity extends AppCompatActivity implements AdapterView
             mAdapter.notifyDataSetChanged();
             listview.invalidate();
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.setData(loadMeasurements());
     }
 
     @Override
