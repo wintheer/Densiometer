@@ -15,32 +15,37 @@
         android:id="@+id/camera_preview"
         android:layout_centerHorizontal="true"
         android:layout_width="330dp"
-        android:layout_height="330dp" />
+        android:layout_height="330dp"
+        />
 
-    <Button
-        android:id="@+id/button_capture"
-        android:layout_centerHorizontal="true"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:text="Tag Billede"
-        android:layout_below="@+id/camera_preview"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
+        <Button
+            android:text="Nyt billede"
+            android:id="@+id/release_preview"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/camera_preview"
+            android:layout_alignLeft="@+id/camera_preview"
+            />
 
-    <Button
-        android:text="Nyt billede"
-        android:id="@+id/release_preview"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_below="@+id/camera_preview"
-        android:layout_toLeftOf="@id/button_capture"
-        android:layout_marginTop="10dp"/>
+        <Button
+            android:id="@+id/button_capture"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/camera_preview"
+            android:text="Tag Billede"
+            />
 
+        <Button
+            android:text="Accepter billede"
+            android:id="@+id/accept_button"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignRight="@+id/camera_preview"
+            android:layout_below="@+id/camera_preview"
+            />
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:layout_below="@id/button_capture"
-        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

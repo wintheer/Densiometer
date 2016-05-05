@@ -22,10 +22,12 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button takePicture;
+    private Button takePicture, releasePreview, acceptButton;
 
     private static Camera mCamera;
     private Preview mPreview;
+
+    private static String fileName;
 
     public static final int MEDIA_TYPE_IMAGE = 1;
 
@@ -46,10 +48,37 @@ public class MainActivity extends AppCompatActivity {
         takePicture = (Button) findViewById(R.id.button_capture);
         takePicture.setOnClickListener(
                 new View.OnClickListener() {
+
                     @Override
                     public void onClick(View v) {
                         // get an image from the camera
                         mCamera.takePicture(null, null, mPicture);
+                    }
+                }
+        );
+
+        // Button for releasing the preview
+        releasePreview = (Button) findViewById(R.id.release_preview);
+        releasePreview.setOnClickListener(
+                new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        mCamera.startPreview();
+                    }
+                }
+        );
+
+        // Button for accepting current picture and processing it
+        acceptButton = (Button) findViewById(R.id.accept_button);
+        acceptButton.setOnClickListener(
+                new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, ImageCalculatorActivity.class);
+                        intent.putExtra("filename", fileName);
+                        startActivity(intent);
                     }
                 }
         );
@@ -140,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
 
+            fileName = mediaFile.toString();
+
         } else {
             return null;
         }
@@ -147,10 +178,7 @@ public class MainActivity extends AppCompatActivity {
         return mediaFile;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+
 
     @Override
     protected void onDestroy() {
@@ -164,9 +192,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 }
 
