@@ -3,4 +3,6 @@
     <string name="images">Billedbehandling</string>
     <string name="choose_image">Vælg billede</string>
     <string name="waiting_for_image">Venter på billede...</string>
+    <string name="image_to_process_description">Billede der behandles</string>
+    <string name="tree_cover_is">"Trækronedækning for billede: "</string>
 </resources>

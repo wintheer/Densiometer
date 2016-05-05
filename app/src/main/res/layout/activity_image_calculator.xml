@@ -9,36 +9,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.winther.densiometer.ImageCalculatorActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/choose_image"
-        android:id="@+id/pick_image"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <ImageView
-        android:id="@+id/image_view_for_processing"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@+id/pick_image"
-        android:layout_alignParentEnd="true" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
         android:id="@+id/processed_image_view"
-        android:layout_above="@+id/image_textview_for_results"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/image_to_process_description" />
 
     <TextView
+        android:id="@+id/text_image_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/waiting_for_image"
-        android:id="@+id/image_textview_for_results"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/pick_image" />
+        android:layout_below="@+id/processed_image_view"
+        android:layout_centerHorizontal="true"
+        android:text="@string/waiting_for_image" />
 
+    <Button
+        android:id="@+id/pick_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/choose_image" />
 
 </RelativeLayout>

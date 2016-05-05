@@ -33,6 +33,7 @@ public class ImageCalculatorActivity extends AppCompatActivity {
 
         Button button = (Button) findViewById(R.id.pick_image);
 
+        assert button != null;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,10 +56,6 @@ public class ImageCalculatorActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            ImageView imageView = (ImageView) findViewById(R.id.image_view_for_processing);
-            imageView.setImageBitmap(mBitmap);
-
             new ProcessImageTask().execute(mBitmap);
         }
 
@@ -66,7 +63,7 @@ public class ImageCalculatorActivity extends AppCompatActivity {
     }
 
 
-    private class ProcessImageTask extends AsyncTask<Bitmap, Void, Long> {
+    private class ProcessImageTask extends AsyncTask<Bitmap, Void, Float> {
         private ProgressDialog progress;
         private Bitmap processedBitmap;
 
@@ -76,69 +73,42 @@ public class ImageCalculatorActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Long doInBackground(Bitmap... params) {
-            long totalAvg = 0;
+        protected Float doInBackground(Bitmap... params) {
+            float treeCoverage = 0;
 
             // assert only one image
             if (params.length == 1) {
                 DensioMeterCalculator calculator = new DensioMeterCalculator(params[0]);
 
-                // Calculate the total average
-                totalAvg = calculator.calculateTotalAvg();
-
                 // Get the processed bitmap for feedback
                 processedBitmap = calculator.getProcessedBitmap();
+
+                // Get the number of covered squares
+                treeCoverage = calculator.getTreeCoverage();
             }
 
-            return totalAvg;
-        }
-
-        /**
-         * Runs through the pixels array, and calculates average light value for the entire image
-         * Stores intermediate results in the lightValues array.
-         *
-         * @param pixels      the array of pixels to run through
-         * @param lightValues stores the intermediate value for every pixel here
-         * @return the average lighting value for the entire image
-         */
-        private long calculateTotalAvg(int[] pixels, int[] lightValues) {
-            int length = pixels.length;
-            long totalAvg = 0;
-            for (int i = 0; i < length; i++) {
-                int red = (pixels[i] & 0x00FF0000) >> 16;
-                int green = (pixels[i] & 0x0000FF00) >> 8;
-                int blue = (pixels[i] & 0x000000FF);
-
-                int avg = 0;
-                avg += red;
-                avg += green;
-                avg += blue;
-
-                avg = avg / 3;
-                lightValues[i] = avg;
-            }
-
-            for (int pixel : lightValues) {
-                totalAvg += pixel;
-            }
-
-            totalAvg = totalAvg / length;
-            return totalAvg;
+            return treeCoverage;
         }
 
         @Override
-        protected void onPostExecute(Long aLong) {
+        protected void onPostExecute(Float numberOfCoveredSquares) {
             if (progress != null) {
                 progress.dismiss();
             }
 
+            String formattedPercentage = " ";
+            formattedPercentage += Math.round((numberOfCoveredSquares*100)) + "%";
+
+            TextView textView = (TextView) findViewById(R.id.text_image_result);
+            assert textView != null;
+            textView.setText(getString(R.string.tree_cover_is) + formattedPercentage );
+
+            // Update the bitmap
             if (processedBitmap != null) {
                 ImageView processedImageView = (ImageView) findViewById(R.id.processed_image_view);
+                assert processedImageView != null;
                 processedImageView.setImageBitmap(processedBitmap);
             }
-
-            TextView resultTextView = (TextView) findViewById(R.id.image_textview_for_results);
-            resultTextView.setText("Middelværdi for billede er: " + aLong);
         }
     }
 
