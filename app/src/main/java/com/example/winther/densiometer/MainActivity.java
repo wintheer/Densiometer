@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     public static Camera getCameraInstance(){
         Camera cam = null;
         try {
-            cam = Camera.open(1); // attempt to get a Camera instance
+            cam = Camera.open(1); // Opens front-camera (value 1)
         }
         catch (Exception e){
             // Camera is not available (in use or does not exist)
@@ -148,14 +148,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+
+            mCamera.release();
+            mCamera = null;
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
     }
-
 }
 

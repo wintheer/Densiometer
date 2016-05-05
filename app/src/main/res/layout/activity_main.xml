@@ -21,7 +21,26 @@
         android:id="@+id/button_capture"
         android:layout_centerHorizontal="true"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Take Picture"
-        android:layout_below="@+id/camera_preview"/>
+        android:layout_height="60dp"
+        android:text="Tag Billede"
+        android:layout_below="@+id/camera_preview"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:text="Nyt billede"
+        android:id="@+id/release_preview"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/camera_preview"
+        android:layout_toLeftOf="@id/button_capture"
+        android:layout_marginTop="10dp"/>
+
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/button_capture"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
