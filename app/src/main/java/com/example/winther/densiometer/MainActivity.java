@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, ImageCalculatorActivity.class);
                         intent.putExtra("filename", fileName);
-                        startActivityForResult(intent, );
+                        startActivityForResult(intent, COUNT_OF_SQUARES);
                     }
                 }
         );
