@@ -3,28 +3,28 @@ package com.example.winther.densiometer;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.winther.densiometer.calculations.DensioMeterCalculator;
+import com.example.winther.densiometer.models.Measurement;
 
 import java.io.IOException;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class ImageCalculatorActivity extends AppCompatActivity {
     private static final String TAG = "ImageCalculatorActivity";
     private static final int REQUEST_IMAGE_CODE = 4321;
+    private Uri chosenImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class ImageCalculatorActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Did we get an image?
         if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE_CODE) {
-            Uri chosenImageUri = data.getData();
+            chosenImageUri = data.getData();
 
             Bitmap mBitmap = null;
             try {
@@ -91,17 +91,17 @@ public class ImageCalculatorActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Float numberOfCoveredSquares) {
+        protected void onPostExecute(final Float numberOfCoveredSquares) {
             if (progress != null) {
                 progress.dismiss();
             }
 
             String formattedPercentage = " ";
-            formattedPercentage += Math.round((numberOfCoveredSquares*100)) + "%";
+            formattedPercentage += Math.round((numberOfCoveredSquares * 100)) + "%";
 
             TextView textView = (TextView) findViewById(R.id.text_image_result);
             assert textView != null;
-            textView.setText(getString(R.string.tree_cover_is) + formattedPercentage );
+            textView.setText(getString(R.string.tree_cover_is) + formattedPercentage);
 
             // Update the bitmap
             if (processedBitmap != null) {
@@ -109,6 +109,24 @@ public class ImageCalculatorActivity extends AppCompatActivity {
                 assert processedImageView != null;
                 processedImageView.setImageBitmap(processedBitmap);
             }
+
+            // Add onClickListener for the "Godkend" button
+            Button saveButton = (Button) findViewById(R.id.save_result_for_image);
+            assert saveButton != null;
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Create the Realm configuration
+                    RealmConfiguration realmConfig = new RealmConfiguration.Builder(ImageCalculatorActivity.this).deleteRealmIfMigrationNeeded().build();
+                    // Open the Realm for the UI thread.
+                    Realm realm = Realm.getInstance(realmConfig);
+                    realm.beginTransaction();
+                    Measurement measurement = realm.createObject(Measurement.class);
+                    measurement.setMeasurement(Math.round((numberOfCoveredSquares * 100)));
+                    measurement.setImagePath(chosenImageUri.getPath());
+                    realm.commitTransaction();
+                }
+            });
         }
     }
 

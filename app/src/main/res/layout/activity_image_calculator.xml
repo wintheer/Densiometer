@@ -17,13 +17,28 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/image_to_process_description" />
 
-    <TextView
-        android:id="@+id/text_image_result"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/processed_image_view"
-        android:layout_centerHorizontal="true"
-        android:text="@string/waiting_for_image" />
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/processed_image_view">
+
+        <TextView
+            android:id="@+id/text_image_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="@string/waiting_for_image" />
+
+        <Button
+            android:id="@+id/save_result_for_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="Godkend" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/pick_image"
