@@ -92,9 +92,8 @@ public class ImageCalculatorActivity extends AppCompatActivity {
                 // Draw lines for the grid on the bitmap
                 processedBitmap = params[0].copy(params[0].getConfig(), true);
 
-                //
                 for (int widthOfRow : calculator.getRowPixelDimensions()) {
-                    Log.i(TAG, "widthOfRow: " + widthOfRow + ", total width: " + width);
+                    // Draw a thick line
                     for (int heightPixel = 0; heightPixel < height; heightPixel++) {
                         processedBitmap.setPixel(widthOfRow - 2, heightPixel, Color.RED);
                         processedBitmap.setPixel(widthOfRow - 1, heightPixel, Color.RED);
@@ -105,11 +104,8 @@ public class ImageCalculatorActivity extends AppCompatActivity {
                 }
 
                 for (int heightOfRow : calculator.getColumnPixelDimensions()) {
-                    Log.i(TAG, "heightOfRow: " + heightOfRow + ", total height: " + height);
-
-                    // Run through the width
+                    // Draw a thick line
                     for (int rowPixel = 0; rowPixel < width; rowPixel++) {
-
                         processedBitmap.setPixel(rowPixel, heightOfRow - 2, Color.RED);
                         processedBitmap.setPixel(rowPixel, heightOfRow - 1, Color.RED);
                         processedBitmap.setPixel(rowPixel, heightOfRow, Color.RED);

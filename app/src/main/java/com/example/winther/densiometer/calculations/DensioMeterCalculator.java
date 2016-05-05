@@ -53,6 +53,23 @@ public class DensioMeterCalculator {
         return totalAvg;
     }
 
+    /**
+     * Calculate the averages for the squares in the image
+     * @return 2-dimensional array with the averages for the squares
+     */
+    public int[][] getAveragesForSquares() {
+        int[][] squares = new int[numberOfColumns][numberOfRows];
+
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (int j = 0; j < numberOfRows; j++) {
+                squares[i][j] = 1;
+                // Make actual calculation
+            }
+        }
+
+        return squares;
+    }
+
     public int[] getRowPixelDimensions() {
         int[] rows = new int[numberOfRows-1];
         for (int i = 1;i < numberOfRows;i++) {
