@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int COUNT_OF_SQUARES = 20;
 
-    private static String fileName;
+    private static String filenameOfPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, ImageCalculatorActivity.class);
-                        intent.putExtra("filename", fileName);
+                        intent.putExtra("filename", filenameOfPath);
                         startActivityForResult(intent, COUNT_OF_SQUARES);
                     }
                 }
@@ -176,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
 
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
+        filenameOfPath = mediaStorageDir.getPath() + File.separator +
+                "IMG_" + timeStamp + ".jpg";
+        mediaFile = new File(filenameOfPath);
 
-            fileName = mediaFile.toString();
 
         return mediaFile;
     }
