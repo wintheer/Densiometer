@@ -40,12 +40,4 @@
             android:text="Godkend" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/pick_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/choose_image" />
-
 </RelativeLayout>

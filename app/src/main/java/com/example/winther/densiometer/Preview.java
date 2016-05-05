@@ -129,7 +129,7 @@ class Preview extends SurfaceView implements SurfaceHolder.Callback {
         // start preview with new settings
         try {
             mCamera.setPreviewDisplay(mHolder);
-            mCamera.setDisplayOrientation(90);
+            mCamera.setDisplayOrientation(180);
             mCamera.startPreview();
 
         } catch (Exception e){
