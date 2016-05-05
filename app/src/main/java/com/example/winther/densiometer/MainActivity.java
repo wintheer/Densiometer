@@ -1,6 +1,9 @@
 package com.example.winther.densiometer;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -27,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private static Camera mCamera;
     private Preview mPreview;
 
-    private static String fileName;
+    private final static int COUNT_OF_SQUARES = 20;
 
-    public static final int MEDIA_TYPE_IMAGE = 1;
+    private static String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, ImageCalculatorActivity.class);
                         intent.putExtra("filename", fileName);
-                        startActivity(intent);
+                        startActivityForResult(intent, );
                     }
                 }
         );
@@ -133,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 
-            File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+            File pictureFile = getOutputMediaFile();
             if (pictureFile == null){
-                Log.d("Class:Main", "Error creating media file, check storage permissions.");
+                Log.d("Class:Main", "Error creating media file, check storage permissions:");
                 return;
             }
 
@@ -152,19 +155,19 @@ public class MainActivity extends AppCompatActivity {
     };
 
     /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(int type){
+    private static File getOutputMediaFile(){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+                Environment.DIRECTORY_PICTURES), "DensiometerApp");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
-                Log.d("MyCameraApp", "failed to create directory");
+                Log.d("Class:Main", "failed to create directory");
                 return null;
             }
         }
@@ -172,20 +175,41 @@ public class MainActivity extends AppCompatActivity {
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE){
+
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
 
             fileName = mediaFile.toString();
 
-        } else {
-            return null;
-        }
-
         return mediaFile;
     }
 
+    private String saveToInternalStorage(Bitmap bitmapImage) {
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File myPath = new File(directory, "densiometer.jpg");
 
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(myPath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return directory.getAbsolutePath();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == COUNT_OF_SQUARES) {
+            //do something
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -198,6 +222,5 @@ public class MainActivity extends AppCompatActivity {
             mCamera = null;
         }
     }
-
 }
 
