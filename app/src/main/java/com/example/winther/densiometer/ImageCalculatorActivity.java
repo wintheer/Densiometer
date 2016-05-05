@@ -3,7 +3,9 @@ package com.example.winther.densiometer;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -79,40 +81,13 @@ public class ImageCalculatorActivity extends AppCompatActivity {
 
             // assert only one image
             if (params.length == 1) {
-                int width = params[0].getWidth();
-                int height = params[0].getHeight();
-                int length = width * height;
+                DensioMeterCalculator calculator = new DensioMeterCalculator(params[0]);
 
-                int[] pixels = new int[length];
-
-                params[0].getPixels(pixels, 0, width, 0, 0, width, height);
-                DensioMeterCalculator calculator = new DensioMeterCalculator(pixels, width, height);
+                // Calculate the total average
                 totalAvg = calculator.calculateTotalAvg();
 
-                // Draw lines for the grid on the bitmap
-                processedBitmap = params[0].copy(params[0].getConfig(), true);
-
-                for (int widthOfRow : calculator.getRowPixelDimensions()) {
-                    // Draw a thick line
-                    for (int heightPixel = 0; heightPixel < height; heightPixel++) {
-                        processedBitmap.setPixel(widthOfRow - 2, heightPixel, Color.RED);
-                        processedBitmap.setPixel(widthOfRow - 1, heightPixel, Color.RED);
-                        processedBitmap.setPixel(widthOfRow, heightPixel, Color.RED);
-                        processedBitmap.setPixel(widthOfRow + 1, heightPixel, Color.RED);
-                        processedBitmap.setPixel(widthOfRow + 2, heightPixel, Color.RED);
-                    }
-                }
-
-                for (int heightOfRow : calculator.getColumnPixelDimensions()) {
-                    // Draw a thick line
-                    for (int rowPixel = 0; rowPixel < width; rowPixel++) {
-                        processedBitmap.setPixel(rowPixel, heightOfRow - 2, Color.RED);
-                        processedBitmap.setPixel(rowPixel, heightOfRow - 1, Color.RED);
-                        processedBitmap.setPixel(rowPixel, heightOfRow, Color.RED);
-                        processedBitmap.setPixel(rowPixel, heightOfRow + 1, Color.RED);
-                        processedBitmap.setPixel(rowPixel, heightOfRow + 2, Color.RED);
-                    }
-                }
+                // Get the processed bitmap for feedback
+                processedBitmap = calculator.getProcessedBitmap();
             }
 
             return totalAvg;

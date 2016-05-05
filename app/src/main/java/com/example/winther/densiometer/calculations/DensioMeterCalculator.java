@@ -1,9 +1,17 @@
 package com.example.winther.densiometer.calculations;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
 /**
- * Created by Christoffer on 05-05-2016.
+ * The DensioMeterClass
+ * Calculates and draws squares and more.
  */
 public class DensioMeterCalculator {
+    private static final String TAG = "DensioMeterCalculator";
+
     /**
      * The number of rows and columns on the image
      * The number of "fields" in the image is rows * columns
@@ -11,16 +19,20 @@ public class DensioMeterCalculator {
     private static final int numberOfRows = 4;
     private static final int numberOfColumns = 4;
 
+    private Bitmap bitmap;
     private int[] pixels;
     private int[] lightValues;
     private int height;
     private int width;
+    private long totalAvg;
 
-    public DensioMeterCalculator(int[] pixels, int width, int height) {
-        this.pixels = pixels;
+    public DensioMeterCalculator(Bitmap bitmap) {
+        this.bitmap = bitmap;
+        width = bitmap.getWidth();
+        height = bitmap.getHeight();
+        pixels = new int[width*height];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
         this.lightValues = new int[pixels.length];
-        this.width = width;
-        this.height = height;
     }
 
     /**
@@ -29,6 +41,10 @@ public class DensioMeterCalculator {
      * @return the average lighting value for the entire image
      */
     public long calculateTotalAvg() {
+        if (this.totalAvg != 0) { // Load cached result
+            return this.totalAvg;
+        }
+
         int length = pixels.length;
         long totalAvg = 0;
         for (int i = 0; i < length; i++) {
@@ -50,24 +66,9 @@ public class DensioMeterCalculator {
         }
 
         totalAvg = totalAvg / length;
+
+        this.totalAvg = totalAvg; // Cache result
         return totalAvg;
-    }
-
-    /**
-     * Calculate the averages for the squares in the image
-     * @return 2-dimensional array with the averages for the squares
-     */
-    public int[][] getAveragesForSquares() {
-        int[][] squares = new int[numberOfColumns][numberOfRows];
-
-        for (int i = 0; i < numberOfColumns; i++) {
-            for (int j = 0; j < numberOfRows; j++) {
-                squares[i][j] = 1;
-                // Make actual calculation
-            }
-        }
-
-        return squares;
     }
 
     public int[] getRowPixelDimensions() {
@@ -86,5 +87,82 @@ public class DensioMeterCalculator {
             columns[i-1] = heightOfColumn;
         }
         return columns;
+    }
+
+    /**
+     * Calculate the average RGB-value for a given image
+     * @param pixels array of pixels from getPixels
+     * @return the average lighting value
+     */
+    private long calculateAverage(int[] pixels) {
+        int length = pixels.length;
+        long average = 0;
+        for (int pixel : pixels) {
+            int red = (pixel & 0x00FF0000) >> 16;
+            int green = (pixel & 0x0000FF00) >> 8;
+            int blue = (pixel & 0x000000FF);
+
+            int avg = 0;
+            avg += red;
+            avg += green;
+            avg += blue;
+
+            avg = avg / 3;
+
+            average += avg;
+        }
+
+        average = average / length;
+        return average;
+    }
+
+    /**
+     * Create the processed Bitmap based on the provided bitmap image
+     * @return the processed Bitmap
+     */
+    public Bitmap getProcessedBitmap() {
+        //Bitmap processedBitmap = bitmap.copy(bitmap.getConfig(), true);
+        Bitmap processedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+        processedBitmap.eraseColor(Color.BLACK);
+        Canvas canvas = new Canvas(processedBitmap);
+        Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        linePaint.setColor(Color.RED);
+        linePaint.setStrokeWidth(10);
+
+        Paint darkSquarePaint = new Paint();
+        darkSquarePaint.setAlpha(80);
+
+        // Build the partial bitmaps
+        int heightOfASingleRow = getColumnPixelDimensions()[0];
+        int widthOfASingleRow = getRowPixelDimensions()[0];
+
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (int j = 0; j < numberOfRows; j++) {
+                Bitmap square = Bitmap.createBitmap(bitmap, i*widthOfASingleRow,j*heightOfASingleRow, widthOfASingleRow, heightOfASingleRow);
+                int[] squarepixels = new int[square.getWidth() * square.getHeight()];
+                square.getPixels(squarepixels, 0, square.getWidth(), 0, 0, square.getWidth(), square.getHeight());
+                long avg = calculateAverage(squarepixels);
+
+                if (avg > calculateTotalAvg()) {
+                    canvas.drawBitmap(square, i*widthOfASingleRow, j*heightOfASingleRow, linePaint);
+                }
+                else {
+                    canvas.drawBitmap(square, i*widthOfASingleRow, j*heightOfASingleRow, darkSquarePaint);
+                }
+            }
+        }
+
+        // Draw vertical lines
+        for (int widthOfRow : getRowPixelDimensions()) {
+            canvas.drawLine(widthOfRow, 0, widthOfRow, height, linePaint);
+        }
+
+        // Draw horizontal lines
+        for (int heightOfRow : getColumnPixelDimensions()) {
+            // Draw a thick line
+            canvas.drawLine(0, heightOfRow, width, heightOfRow, linePaint);
+        }
+
+        return processedBitmap;
     }
 }
