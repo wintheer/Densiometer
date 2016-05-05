@@ -20,9 +20,17 @@
     <ImageView
         android:id="@+id/image_view_for_processing"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/image_textview_for_results"
+        android:layout_height="200dp"
+        android:layout_below="@+id/pick_image"
         android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/processed_image_view"
+        android:layout_above="@+id/image_textview_for_results"
+        android:layout_centerHorizontal="true" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,5 +39,6 @@
         android:id="@+id/image_textview_for_results"
         android:layout_alignParentBottom="true"
         android:layout_alignEnd="@+id/pick_image" />
+
 
 </RelativeLayout>

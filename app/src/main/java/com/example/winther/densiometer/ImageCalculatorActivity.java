@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.URL;
 
 public class ImageCalculatorActivity extends AppCompatActivity {
     private static final String TAG = "ImageCalculatorActivity";
@@ -64,6 +64,7 @@ public class ImageCalculatorActivity extends AppCompatActivity {
 
     private class ProcessImageTask extends AsyncTask<Bitmap, Void, Long> {
         private ProgressDialog progress;
+        private Bitmap processedBitmap;
 
         @Override
         protected void onPreExecute() {
@@ -83,29 +84,72 @@ public class ImageCalculatorActivity extends AppCompatActivity {
                 int[] pixels = new int[length];
 
                 params[0].getPixels(pixels, 0, width, 0, 0, width, height);
+                totalAvg = calculateTotalAvg(pixels, lightValues);
 
-                for (int i = 0; i < length; i++) {
-                    int alpha=pixels[i]>>24;
-                    int red=(pixels[i] & 0x00FF0000)>>16;
-                    int green=(pixels[i] & 0x0000FF00)>>8;
-                    int blue=(pixels[i] & 0x000000FF);
+                // Draw lines for the grid on the bitmap
+                processedBitmap = params[0].copy(params[0].getConfig(), true);
 
-                    int avg = 0;
-                    avg += red;
-                    avg += green;
-                    avg += blue;
+                //
+                for (int i = 1;i < 4;i++) {
+                    int heightOfRow = (int) ((i/4f) * height);
+                    int widthOfRow = (int) ((i/4f) * width);
 
-                    avg = avg / 3;
-                    lightValues[i] = avg;
+                    Log.i(TAG, "Height of row: " + heightOfRow + ", total height: " + height);
+                    Log.i(TAG, "Width of row: " + widthOfRow + ", total width: " + width);
+
+                    // Run through the width
+                    for (int rowPixel = 0; rowPixel < width; rowPixel++) {
+
+                        processedBitmap.setPixel(rowPixel, heightOfRow-2, Color.RED);
+                        processedBitmap.setPixel(rowPixel, heightOfRow-1, Color.RED);
+                        processedBitmap.setPixel(rowPixel, heightOfRow, Color.RED);
+                        processedBitmap.setPixel(rowPixel, heightOfRow+1, Color.RED);
+                        processedBitmap.setPixel(rowPixel, heightOfRow+2, Color.RED);
+                    }
+
+                    // Run through the height
+                    for (int heightPixel = 0; heightPixel < height; heightPixel++) {
+                        processedBitmap.setPixel(widthOfRow-2, heightPixel, Color.RED);
+                        processedBitmap.setPixel(widthOfRow-1, heightPixel, Color.RED);
+                        processedBitmap.setPixel(widthOfRow, heightPixel, Color.RED);
+                        processedBitmap.setPixel(widthOfRow+1, heightPixel, Color.RED);
+                        processedBitmap.setPixel(widthOfRow+2, heightPixel, Color.RED);
+                    }
                 }
-
-                for (int pixel : lightValues) {
-                    totalAvg += pixel;
-                }
-
-                totalAvg = totalAvg / length;
             }
 
+            return totalAvg;
+        }
+
+        /**
+         * Runs through the pixels array, and calculates average light value for the entire image
+         * Stores intermediate results in the lightValues array.
+         * @param pixels the array of pixels to run through
+         * @param lightValues stores the intermediate value for every pixel here
+         * @return the average lighting value for the entire image
+         */
+        private long calculateTotalAvg(int[] pixels, int[] lightValues) {
+            int length = pixels.length;
+            long totalAvg = 0;
+            for (int i = 0; i < length; i++) {
+                int red=(pixels[i] & 0x00FF0000)>>16;
+                int green=(pixels[i] & 0x0000FF00)>>8;
+                int blue=(pixels[i] & 0x000000FF);
+
+                int avg = 0;
+                avg += red;
+                avg += green;
+                avg += blue;
+
+                avg = avg / 3;
+                lightValues[i] = avg;
+            }
+
+            for (int pixel : lightValues) {
+                totalAvg += pixel;
+            }
+
+            totalAvg = totalAvg / length;
             return totalAvg;
         }
 
@@ -113,6 +157,11 @@ public class ImageCalculatorActivity extends AppCompatActivity {
         protected void onPostExecute(Long aLong) {
             if (progress != null) {
                 progress.dismiss();
+            }
+
+            if (processedBitmap != null) {
+                ImageView processedImageView = (ImageView) findViewById(R.id.processed_image_view);
+                processedImageView.setImageBitmap(processedBitmap);
             }
 
             TextView resultTextView = (TextView) findViewById(R.id.image_textview_for_results);
