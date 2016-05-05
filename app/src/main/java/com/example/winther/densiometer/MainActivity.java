@@ -149,23 +149,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        releaseCamera();
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        releaseCamera();
         super.onPause();
     }
 
-    /**
-     * Releases the camera if it is not null
-     */
-    private void releaseCamera() {
-        if (mCamera != null) {
-            mCamera.release();
-            mCamera = null;
-        }
-    }
 }
+
