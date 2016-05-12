@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Winther on 05/05/16.
  */
 class Preview extends SurfaceView implements SurfaceHolder.Callback {
-
+    private static final String TAG = "SurfaceView";
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
@@ -97,7 +97,17 @@ class Preview extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
+        Log.i(TAG, "Camera" + mCamera);
+
         try {
+            if (mCamera == null) {
+                try {
+                    mCamera = Camera.open(1); // Opens front-camera (value 1)
+                }
+                catch (Exception e) {
+                    // Do something
+                }
+            }
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
 
@@ -139,7 +149,6 @@ class Preview extends SurfaceView implements SurfaceHolder.Callback {
         } catch (Exception e){
             Log.d("Class:Preview", "Error starting camera preview: " + e.getMessage());
         }
-
     }
 
     @Override
