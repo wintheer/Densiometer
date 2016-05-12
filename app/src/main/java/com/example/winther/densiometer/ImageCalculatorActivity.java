@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.winther.densiometer.calculations.DensioMeterCalculator;
+import com.example.winther.densiometer.calculations.ExifUtil;
 import com.example.winther.densiometer.models.Measurement;
 
 import java.io.File;
