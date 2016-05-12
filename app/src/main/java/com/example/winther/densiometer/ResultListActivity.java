@@ -1,6 +1,8 @@
 package com.example.winther.densiometer;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +30,7 @@ public class ResultListActivity extends AppCompatActivity {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
         realm = Realm.getInstance(realmConfiguration); // Create a new empty instance of Realm
 
-        if(mAdapter == null) {
+        if (mAdapter == null) {
             List<Measurement> measurements = loadMeasurements();
 
             //This is the GridView adapter
@@ -67,8 +69,25 @@ public class ResultListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete_items:
-                // Delete all items
-                mAdapter.deleteAllItems();
+                // Show dialog to delete all items
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder
+                        .setTitle("Slet alle målinger")
+                        .setMessage("Er du sikker på, at du vil slette alle målinger? Dette kan ikke gøres om.")
+                        .setNeutralButton("Annuller", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("Slet alle målinger", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAdapter.deleteAllItems(); // Delete all items
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
