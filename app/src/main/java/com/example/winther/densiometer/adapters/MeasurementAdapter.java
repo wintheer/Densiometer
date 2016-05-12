@@ -65,15 +65,14 @@ public class MeasurementAdapter extends BaseAdapter {
         Measurement measurement = measurements.get(position);
 
         if (measurement != null) {
-            ((TextView) convertView.findViewById(R.id.measurement_list_item_text)).setText(measurement.getMeasurement() +"");
+            ((TextView) convertView.findViewById(R.id.measurement_list_item_id_text)).setText("Måling nummer: " + position);
+            ((TextView) convertView.findViewById(R.id.measurement_list_item_measurement_text)).setText(measurement.getMeasurement() + "");
 
             try {
-                File f=new File(measurement.getImagePath());
+                File f = new File(measurement.getImagePath());
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
                 ((ImageView) convertView.findViewById(R.id.measurement_list_item_image)).setImageBitmap(b);
-            }
-            catch (FileNotFoundException e)
-            {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
 
