@@ -16,8 +16,8 @@ public class DensioMeterCalculator {
      * The number of rows and columns on the image
      * The number of "fields" in the image is rows * columns
      */
-    private static final int numberOfRows = 6;
-    private static final int numberOfColumns = 6;
+    private static final int numberOfRows = 8;
+    private static final int numberOfColumns = 8;
 
     /**
      * The percentage below the average a field must be to be considered "covered"
