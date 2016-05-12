@@ -99,7 +99,6 @@ class Preview extends SurfaceView implements SurfaceHolder.Callback {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
             mCamera.setPreviewDisplay(holder);
-            mCamera.setDisplayOrientation(90);
             mCamera.startPreview();
 
             // Sets the orientation of the camera to portrait
@@ -134,7 +133,7 @@ class Preview extends SurfaceView implements SurfaceHolder.Callback {
         // start preview with new settings
         try {
             mCamera.setPreviewDisplay(mHolder);
-            mCamera.setDisplayOrientation(180);
+            mCamera.setDisplayOrientation(90);
             mCamera.startPreview();
 
         } catch (Exception e){
@@ -145,7 +144,13 @@ class Preview extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed (SurfaceHolder holder){
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
 
+            mCamera.release();
+            mCamera = null;
+        }
     }
 
     @Override

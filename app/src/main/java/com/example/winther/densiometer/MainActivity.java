@@ -210,13 +210,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.setPreviewCallback(null);
-
-            mCamera.release();
-            mCamera = null;
-        }
     }
 
     @Override
