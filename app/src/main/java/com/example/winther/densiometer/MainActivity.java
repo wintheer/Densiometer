@@ -40,7 +40,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Create an instance of Camera
+        mCamera = getCameraInstance();
 
+        //Create our Preview view and set it as the content of our activity
+        mPreview = new Preview(this, mCamera);
+
+        FrameLayout picturePreview = (FrameLayout) findViewById(R.id.camera_preview);
+        picturePreview.addView(mPreview);
 
 
         // Button for taking a picture.
@@ -215,13 +221,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mCamera = getCameraInstance();
-
-        //Create our Preview view and set it as the content of our activity
-        mPreview = new Preview(this, mCamera);
-
-        FrameLayout picturePreview = (FrameLayout) findViewById(R.id.camera_preview);
-        picturePreview.addView(mPreview);
     }
 
     @Override
