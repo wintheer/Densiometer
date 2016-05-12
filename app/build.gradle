@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.winther.densiometer"
-        minSdkVersion 21
+        minSdkVersion 18
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
