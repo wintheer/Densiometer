@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.example.winther.densiometer.util.ImageUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -135,11 +137,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            File pictureFile = getOutputMediaFile();
+            File pictureFile = ImageUtils.getOutputMediaFile();
             if (pictureFile == null) {
                 Log.d("Class:Main", "Error creating media file, check storage permissions:");
                 return;
             }
+            filenameOfPath = pictureFile.getAbsolutePath();
 
             try {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
@@ -152,56 +155,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
-    /**
-     * Create a File for saving an image or video
-     */
-    private static File getOutputMediaFile() {
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "DensiometerApp");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("Class:Main", "failed to create directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-
-        filenameOfPath = mediaStorageDir.getPath() + File.separator +
-                "IMG_" + timeStamp + ".jpg";
-        mediaFile = new File(filenameOfPath);
-
-
-        return mediaFile;
-    }
-
-    private String saveToInternalStorage(Bitmap bitmapImage) {
-        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File myPath = new File(directory, "densiometer.jpg");
-
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(myPath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return directory.getAbsolutePath();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
