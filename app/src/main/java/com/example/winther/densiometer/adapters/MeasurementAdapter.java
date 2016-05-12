@@ -82,6 +82,7 @@ public class MeasurementAdapter extends BaseAdapter {
     }
 
     public void deleteAllItems() {
-        
+        this.measurements = null;
+        notifyDataSetChanged();
     }
 }
