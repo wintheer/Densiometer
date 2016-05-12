@@ -24,10 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-
     private Button takePicture, releasePreview, acceptButton;
-
-    private static Camera mCamera;
     private Preview mPreview;
 
     private final static int COUNT_OF_SQUARES = 20;
@@ -40,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Create an instance of Camera
-        mCamera = getCameraInstance();
+        Camera mCamera = getCameraInstance();
 
         //Create our Preview view and set it as the content of our activity
         mPreview = new Preview(this, mCamera);
@@ -51,41 +48,48 @@ public class MainActivity extends AppCompatActivity {
 
         // Button for taking a picture.
         takePicture = (Button) findViewById(R.id.button_capture);
-        takePicture.setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // get an image from the camera
-                        mCamera.takePicture(null, null, mPicture);
-                    }
-                }
-        );
 
         // Button for releasing the preview
         releasePreview = (Button) findViewById(R.id.release_preview);
-        releasePreview.setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mCamera.startPreview();
-                    }
-                }
-        );
 
         // Button for accepting current picture and processing it
         acceptButton = (Button) findViewById(R.id.accept_button);
-        acceptButton.setOnClickListener(
-                new View.OnClickListener() {
+    }
 
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, ImageCalculatorActivity.class);
-                        intent.putExtra("filename", filenameOfPath);
-                        startActivityForResult(intent, COUNT_OF_SQUARES);
-                    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Register onClickListeners again (with the camera from mPreview
+        takePicture.setOnClickListener(
+            new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // get an image from the camera
+                    mPreview.getCamera().takePicture(null, null, mPicture);
                 }
+            }
+        );
+
+        releasePreview.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPreview.getCamera().startPreview();
+                }
+            }
+        );
+
+        acceptButton.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ImageCalculatorActivity.class);
+                    intent.putExtra("filename", filenameOfPath);
+                    startActivityForResult(intent, COUNT_OF_SQUARES);
+                }
+            }
         );
     }
 
@@ -113,13 +117,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
+    /**
+     * A safe way to get an instance of the Camera object.
+     */
+    public static Camera getCameraInstance() {
         Camera cam = null;
         try {
             cam = Camera.open(1); // Opens front-camera (value 1)
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             // Camera is not available (in use or does not exist)
             Log.d("Class:Main", e.getMessage());
         }
@@ -130,9 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-
             File pictureFile = getOutputMediaFile();
-            if (pictureFile == null){
+            if (pictureFile == null) {
                 Log.d("Class:Main", "Error creating media file, check storage permissions:");
                 return;
             }
@@ -149,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(){
+    /**
+     * Create a File for saving an image or video
+     */
+    private static File getOutputMediaFile() {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
@@ -160,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
         // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
                 Log.d("Class:Main", "failed to create directory");
                 return null;
             }
@@ -201,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == COUNT_OF_SQUARES) {
+        if (requestCode == COUNT_OF_SQUARES) {
             //do something
         }
     }

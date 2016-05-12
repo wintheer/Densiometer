@@ -1,13 +1,10 @@
 package com.example.winther.densiometer;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.winther.densiometer.adapters.MeasurementAdapter;
@@ -17,10 +14,8 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
 
-public class ResultListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
-
+public class ResultListActivity extends AppCompatActivity {
     private Realm realm;
     private MeasurementAdapter mAdapter;
     private ListView listview;
@@ -44,11 +39,9 @@ public class ResultListActivity extends AppCompatActivity implements AdapterView
             listview = (ListView) findViewById(R.id.measurement_list_view);
             assert listview != null;
             listview.setAdapter(mAdapter);
-            listview.setOnItemClickListener(ResultListActivity.this);
             mAdapter.notifyDataSetChanged();
             listview.invalidate();
         }
-
     }
 
     @Override
@@ -77,22 +70,15 @@ public class ResultListActivity extends AppCompatActivity implements AdapterView
                 // Delete all items
                 mAdapter.deleteAllItems();
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
     private List<Measurement> loadMeasurements() {
         // Pull all the cities from the realm
         return realm.where(Measurement.class).findAll();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // DO nothing
     }
 }

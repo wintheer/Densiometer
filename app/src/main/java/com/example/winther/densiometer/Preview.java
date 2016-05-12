@@ -166,5 +166,9 @@ class Preview extends SurfaceView implements SurfaceHolder.Callback {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
     }
+
+    public Camera getCamera() {
+        return mCamera;
+    }
 }
 
