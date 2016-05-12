@@ -100,14 +100,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_photo:
-                // User chose the "Settings" item, show the app settings UI...
-                intent = new Intent(this, ImageCalculatorActivity.class);
-                startActivity(intent);
-                return true;
-
             case R.id.action_result_list:
-                // User chose the "Settings" item, show the app settings UI...
                 intent = new Intent(this, ResultListActivity.class);
                 startActivity(intent);
                 return true;
