@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin">
 
     <TextView
         android:id="@+id/measurement_list_item_id_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:text="Måling nummer 1"
+        android:text="1: "
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
 
@@ -16,7 +18,7 @@
         android:id="@+id/measurement_list_item_measurement_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="56"
+        android:text="Dækning 56%"
         android:textSize="20dp"
         android:layout_marginStart="15dp"
         android:layout_centerVertical="true"
@@ -24,8 +26,8 @@
 
     <ImageView
         android:id="@+id/measurement_list_item_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="70dp"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true" />
 

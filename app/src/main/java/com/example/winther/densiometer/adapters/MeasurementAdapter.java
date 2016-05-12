@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.winther.densiometer.R;
 import com.example.winther.densiometer.models.Measurement;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,13 +24,14 @@ import java.util.Locale;
  * Created by Christoffer on 05-05-2016.
  */
 public class MeasurementAdapter extends BaseAdapter {
-
+    private Context context;
     private LayoutInflater inflater;
 
     private List<Measurement> measurements = null;
 
     public MeasurementAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.context = context;
     }
 
     public void setData(List<Measurement> measurements) {
@@ -65,19 +67,21 @@ public class MeasurementAdapter extends BaseAdapter {
         Measurement measurement = measurements.get(position);
 
         if (measurement != null) {
-            ((TextView) convertView.findViewById(R.id.measurement_list_item_id_text)).setText("Måling nummer: " + position);
-            ((TextView) convertView.findViewById(R.id.measurement_list_item_measurement_text)).setText(measurement.getMeasurement() + "");
+            ((TextView) convertView.findViewById(R.id.measurement_list_item_id_text)).setText(position + ":");
+            ((TextView) convertView.findViewById(R.id.measurement_list_item_measurement_text)).setText("Dækning: " + measurement.getMeasurement() + "%");
 
-            try {
-                File f = new File(measurement.getImagePath());
-                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-                ((ImageView) convertView.findViewById(R.id.measurement_list_item_image)).setImageBitmap(b);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
+            File f = new File(measurement.getImagePath());
+            Picasso.with(context)
+                    .load(f)
+                    .resize(400, 400)
+                    .centerInside()
+                    .onlyScaleDown()
+                    .into(((ImageView) convertView.findViewById(R.id.measurement_list_item_image)));
         }
-
         return convertView;
+    }
+
+    public void deleteAllItems() {
+        
     }
 }

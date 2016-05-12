@@ -6,4 +6,5 @@
     <string name="image_to_process_description">Billede der behandles</string>
     <string name="tree_cover_is">"Trækronedækning for billede: "</string>
     <string name="see_measurements">Se målinger</string>
+    <string name="delete_all">Slet alle målinger</string>
 </resources>
