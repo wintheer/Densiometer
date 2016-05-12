@@ -15,10 +15,13 @@ import android.widget.TextView;
 import com.example.winther.densiometer.calculations.DensioMeterCalculator;
 import com.example.winther.densiometer.calculations.ExifUtil;
 import com.example.winther.densiometer.models.Measurement;
+import com.example.winther.densiometer.util.ImageUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -84,12 +87,27 @@ public class ImageCalculatorActivity extends AppCompatActivity {
             assert textView != null;
             textView.setText(getString(R.string.tree_cover_is) + formattedPercentage);
 
+            File manipulatedFile = null;
             // Update the bitmap
             if (processedBitmap != null) {
                 ImageView processedImageView = (ImageView) findViewById(R.id.processed_image_view);
                 assert processedImageView != null;
                 processedImageView.setImageBitmap(processedBitmap);
+
+                manipulatedFile = ImageUtils.getOutputMediaFile();
+                if (manipulatedFile == null) return;
+                try {
+                    FileOutputStream fos = new FileOutputStream(manipulatedFile);
+                    processedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos);
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
+            assert manipulatedFile != null;
+            final String filenameAndPath = manipulatedFile.getAbsolutePath();
 
             // Add onClickListener for the "Godkend" button
             Button saveButton = (Button) findViewById(R.id.save_result_for_image);
@@ -105,6 +123,7 @@ public class ImageCalculatorActivity extends AppCompatActivity {
                     Measurement measurement = realm.createObject(Measurement.class);
                     measurement.setMeasurement(Math.round((numberOfCoveredSquares * 100)));
                     measurement.setImagePath(fileNameAndPath);
+                    measurement.setCalculatedImagePath(filenameAndPath);
                     realm.commitTransaction();
 
                     Intent resultIntent = new Intent();

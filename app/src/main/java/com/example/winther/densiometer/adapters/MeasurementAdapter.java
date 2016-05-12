@@ -70,7 +70,7 @@ public class MeasurementAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.measurement_list_item_id_text)).setText(position + ":");
             ((TextView) convertView.findViewById(R.id.measurement_list_item_measurement_text)).setText("Dækning: " + measurement.getMeasurement() + "%");
 
-            File f = new File(measurement.getImagePath());
+            File f = new File(measurement.getCalculatedImagePath());
             Picasso.with(context)
                     .load(f)
                     .resize(400, 400)

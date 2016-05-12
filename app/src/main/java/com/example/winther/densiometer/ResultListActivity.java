@@ -20,7 +20,6 @@ import io.realm.RealmConfiguration;
 public class ResultListActivity extends AppCompatActivity {
     private Realm realm;
     private MeasurementAdapter mAdapter;
-    private ListView listview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class ResultListActivity extends AppCompatActivity {
             mAdapter.setData(measurements);
 
             //This is the GridView which will display the list of measurements
-            listview = (ListView) findViewById(R.id.measurement_list_view);
+                ListView listview = (ListView) findViewById(R.id.measurement_list_view);
             assert listview != null;
             listview.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
